@@ -1,15 +1,18 @@
 import React from "react";
 
-import Card from "../UI/Card";
 import "./Cat.css";
 
 const Cat = (props) => {
+  const playSound = () => {
+    console.log("clicked!");
+  };
+
   return (
-    <div>
-      <Card>
-        <img src={"./assets/white-cat.png"} alt="White Cat" />
-      </Card>
-    </div>
+    <img
+      src={`./assets/images/${props.name}.png`}
+      alt="White Cat"
+      onClick={playSound}
+    />
   );
 };
 
