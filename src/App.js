@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 
 import Cat from "./components/Cat/Cat";
 import Card from "./components/UI/Card";
 import Restart from "./components/UI/RestartButton";
+import Sequencer from "./components/Sequencer/Sequencer";
 
 import "./App.css";
 
@@ -19,7 +20,32 @@ const playSound = (name) => {
   sound.play();
 };
 
+const newSequence = (length) => {
+  const sequence = [];
+  for (let i = 0; i < length; i++) {
+    sequence.push(false);
+  }
+  return sequence;
+};
+
 function App() {
+  const [sequencer, setSequencer] = useState({
+    "white-cat": newSequence(16),
+    "black-cat": newSequence(16),
+    "stripped-cat": newSequence(16),
+    "orange-cat": newSequence(16),
+    "boop-cat": newSequence(16),
+  });
+
+  const toggleBeat = (trackName, sequenceIndex) => {
+    const sequence = sequencer[trackName];
+    sequence[sequenceIndex] = !sequence[sequenceIndex];
+    setSequencer({
+      ...sequencer,
+      [trackName]: sequence,
+    });
+  };
+
   const onClickCat = (name) => () => {
     playSound(name);
   };
@@ -29,9 +55,10 @@ function App() {
       <h1>Singing Kittens</h1>
       <Restart />
       <Card>
-        {Object.keys(sounds).map((name) => (
-          <Cat name={name} onClick={onClickCat(name)} />
+        {Object.keys(sequencer).map((name) => (
+          <Cat key={name} name={name} onClick={onClickCat(name)} />
         ))}
+        <Sequencer sequencer={sequencer} toggleBeat={toggleBeat} />
       </Card>
     </div>
   );
