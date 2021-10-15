@@ -1,3 +1,5 @@
+import React from "react";
+
 import Cat from "./components/Cat/Cat";
 import Card from "./components/UI/Card";
 import Restart from "./components/UI/RestartButton";
