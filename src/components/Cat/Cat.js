@@ -10,7 +10,7 @@ const Cat = (props) => {
   return (
     <img
       src={`./assets/images/${props.name}.png`}
-      alt="Picture of Cat"
+      alt="Cat"
       onClick={playSound}
     />
   );

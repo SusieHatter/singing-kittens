@@ -1,7 +1,8 @@
 import Cat from "./components/Cat/Cat";
 import Card from "./components/UI/Card";
-import "./App.css";
 import Restart from "./components/UI/RestartButton";
+
+import "./App.css";
 
 function App() {
   return (
