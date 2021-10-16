@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import "./App.css";
 
+import useInterval from "./hooks/useInterval";
 import Cat from "./components/Cat/Cat";
 import Card from "./components/UI/Card";
 import Restart from "./components/UI/RestartButton";
@@ -21,7 +22,7 @@ const sounds = {
 
 const playSound = (name) => {
   let sound = sounds[name];
-  sound.cloneNode().play();
+  sound.cloneNode().play(); // cloned to allow same sound to play multiple times
 };
 
 const newSequence = (length) => {
@@ -54,17 +55,13 @@ const getPlayingTracks = (sequencer, playingBeat) => {
 function App() {
   const [sequencer, setSequencer] = useState(INITIAL_STATE);
   const [playingBeat, setPlayingBeat] = useState(0);
+  const [playing, setPlaying] = useState(false);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setPlayingBeat(
-        (playingBeat) => (playingBeat + 1) % NUM_BEATS_IN_SEQUENCE
-      );
-    }, (1000 * 60) / BPM);
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
+  useInterval(() => {
+    if (playing) {
+      setPlayingBeat((playingBeat + 1) % NUM_BEATS_IN_SEQUENCE);
+    }
+  }, (1000 * 60) / BPM);
 
   const playingTracks = getPlayingTracks(sequencer, playingBeat);
   for (let trackName of playingTracks) {
@@ -73,6 +70,8 @@ function App() {
 
   const resetSequencer = () => {
     setSequencer(INITIAL_STATE);
+    setPlayingBeat(0);
+    setPlaying(false);
   };
 
   const toggleBeat = (trackName, sequenceIndex) => {
@@ -84,6 +83,10 @@ function App() {
     });
   };
 
+  const togglePlay = () => {
+    setPlaying(!playing);
+  };
+
   const onClickCat = (name) => () => {
     playSound(name);
   };
@@ -92,7 +95,7 @@ function App() {
     <div>
       <h1>Singing Kittens</h1>
       <Restart onClick={resetSequencer} />
-      <PlayIt />
+      <PlayIt onClick={togglePlay} playing={playing} />
       <Card>
         {Object.keys(sequencer).map((name) => (
           <Cat key={name} name={name} onClick={onClickCat(name)} />
