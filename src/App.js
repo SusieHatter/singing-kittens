@@ -8,6 +8,7 @@ import Card from "./components/UI/Card";
 import Restart from "./components/UI/RestartButton";
 import Sequencer from "./components/Sequencer/Sequencer";
 import PlayIt from "./components/UI/PlayButton";
+import { useEffect } from "react/cjs/react.development";
 
 const BPM = 200;
 const NUM_BEATS_IN_SEQUENCE = 16;
@@ -57,6 +58,18 @@ function App() {
   const [playingBeat, setPlayingBeat] = useState(0);
   const [playing, setPlaying] = useState(false);
 
+  // decode sequencer from url
+  useEffect(() => {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());
+    const encodedSequencer = params["s"];
+    if (!encodedSequencer) {
+      return;
+    }
+    const newSequencer = JSON.parse(Buffer.from(encodedSequencer, "base64"));
+    setSequencer(newSequencer);
+  }, []);
+
   useInterval(() => {
     if (playing) {
       setPlayingBeat((playingBeat + 1) % NUM_BEATS_IN_SEQUENCE);
@@ -77,10 +90,23 @@ function App() {
   const toggleBeat = (trackName, sequenceIndex) => {
     const sequence = [...sequencer[trackName]];
     sequence[sequenceIndex] = !sequence[sequenceIndex];
-    setSequencer({
+    const newSequencer = {
       ...sequencer,
       [trackName]: sequence,
-    });
+    };
+    // encode sequencer into url
+    const encodedSequencer = Buffer.from(JSON.stringify(newSequencer)).toString(
+      "base64"
+    );
+    const newurl =
+      window.location.protocol +
+      "//" +
+      window.location.host +
+      window.location.pathname +
+      "?s=" +
+      encodedSequencer;
+    window.history.pushState({ path: newurl }, "", newurl);
+    setSequencer(newSequencer);
   };
 
   const togglePlay = () => {
