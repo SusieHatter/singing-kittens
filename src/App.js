@@ -28,17 +28,23 @@ const newSequence = (length) => {
   return sequence;
 };
 
+const INITIAL_STATE = {
+  "white-cat": newSequence(16),
+  "black-cat": newSequence(16),
+  "stripped-cat": newSequence(16),
+  "orange-cat": newSequence(16),
+  "boop-cat": newSequence(16),
+};
+
 function App() {
-  const [sequencer, setSequencer] = useState({
-    "white-cat": newSequence(16),
-    "black-cat": newSequence(16),
-    "stripped-cat": newSequence(16),
-    "orange-cat": newSequence(16),
-    "boop-cat": newSequence(16),
-  });
+  const [sequencer, setSequencer] = useState(INITIAL_STATE);
+
+  const resetSequencer = () => {
+    setSequencer(INITIAL_STATE);
+  };
 
   const toggleBeat = (trackName, sequenceIndex) => {
-    const sequence = sequencer[trackName];
+    const sequence = [...sequencer[trackName]];
     sequence[sequenceIndex] = !sequence[sequenceIndex];
     setSequencer({
       ...sequencer,
@@ -53,7 +59,7 @@ function App() {
   return (
     <div>
       <h1>Singing Kittens</h1>
-      <Restart />
+      <Restart onClick={resetSequencer} />
       <Card>
         {Object.keys(sequencer).map((name) => (
           <Cat key={name} name={name} onClick={onClickCat(name)} />
