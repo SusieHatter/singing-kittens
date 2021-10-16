@@ -76,9 +76,11 @@ function App() {
     }
   }, (1000 * 60) / BPM);
 
-  const playingTracks = getPlayingTracks(sequencer, playingBeat);
-  for (let trackName of playingTracks) {
-    playSound(trackName);
+  if (playing) {
+    const playingTracks = getPlayingTracks(sequencer, playingBeat);
+    for (let trackName of playingTracks) {
+      playSound(trackName);
+    }
   }
 
   const resetSequencer = () => {
