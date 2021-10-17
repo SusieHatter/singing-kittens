@@ -5,15 +5,15 @@ import "./Sequencer.css";
 const getBeatColor = (isOn, isPlaying) => {
   if (isOn) {
     if (isPlaying) {
-      return "lightgreen";
+      return "rgb(54, 189, 177)";
     } else {
-      return "green";
+      return "rgb(116, 56, 212)";
     }
   } else {
     if (isPlaying) {
-      return "yellow";
+      return "rgb(121, 255, 248)";
     } else {
-      return "red";
+      return "rgb(144, 104, 168)";
     }
   }
 };
@@ -27,7 +27,7 @@ const Beat = ({ isOn, isPlaying, onClick }) => (
 );
 
 const Sequence = ({ sequence, trackName, toggleBeat, playingBeat }) => (
-  <div>
+  <div className="sequence">
     {sequence.map((beat, i) => (
       <Beat
         key={i}
@@ -40,7 +40,7 @@ const Sequence = ({ sequence, trackName, toggleBeat, playingBeat }) => (
 );
 
 const Sequencer = ({ sequencer, toggleBeat, playingBeat }) => (
-  <div>
+  <div className="sequencer">
     {Object.entries(sequencer).map(([trackName, sequence]) => (
       <Sequence
         key={trackName}
